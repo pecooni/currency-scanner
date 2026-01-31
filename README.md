@@ -52,4 +52,4 @@ MIT - Slobodno koristite!
 
 ---
 
-Made with ❤️ by [Vaše Ime]
+Made with ❤️ by Petar
