@@ -869,17 +869,69 @@
         // Camera functions
         async function startCamera() {
             try {
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: 'environment' },
+                // Provera da li browser podržava getUserMedia
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    alert('❌ Vaš browser ne podržava pristup kameri.\n\nMožete koristiti aplikaciju bez kamere.');
+                    return;
+                }
+
+                // Pokušaj sa zadnjom kamerom (environment)
+                let constraints = {
+                    video: { 
+                        facingMode: 'environment',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
                     audio: false
-                });
+                };
+
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia(constraints);
+                } catch (err) {
+                    // Ako ne uspe sa environment, pokušaj sa bilo kojom kamerom
+                    console.log('Pokušavam sa bilo kojom kamerom...');
+                    constraints = {
+                        video: true,
+                        audio: false
+                    };
+                    stream = await navigator.mediaDevices.getUserMedia(constraints);
+                }
+                
                 const video = document.getElementById('cameraVideo');
-                video.srcObject = stream;
+                if (video) {
+                    video.srcObject = stream;
+                    
+                    // Osiguraj da video počne da se reprodukuje
+                    video.onloadedmetadata = () => {
+                        video.play().catch(e => console.error('Video play error:', e));
+                    };
+                }
+                
                 cameraActive = true;
                 renderCamera();
+                
             } catch (error) {
-                alert('Kamera nije dostupna. Možete koristiti aplikaciju i bez kamere.');
                 console.error('Camera error:', error);
+                
+                // Detaljnije error poruke
+                let errorMessage = '❌ Ne mogu pristupiti kameri.\n\n';
+                
+                if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+                    errorMessage += 'Razlog: Niste dozvolili pristup kameri.\n\n';
+                    errorMessage += 'Rešenje:\n';
+                    errorMessage += '• Kliknite "Dozvoli" kada browser pita\n';
+                    errorMessage += '• Ili proverite podešavanja browsera\n\n';
+                } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
+                    errorMessage += 'Razlog: Kamera nije pronađena.\n\n';
+                } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
+                    errorMessage += 'Razlog: Kamera je možda u upotrebi od strane druge aplikacije.\n\n';
+                } else {
+                    errorMessage += 'Razlog: ' + error.message + '\n\n';
+                }
+                
+                errorMessage += 'Možete koristiti aplikaciju i bez kamere!';
+                
+                alert(errorMessage);
             }
         }
 
