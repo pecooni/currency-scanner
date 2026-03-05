@@ -7,6 +7,65 @@
     <title>💱 Skener Cena - Currency Converter</title>
     
     <style>
+        /* Theme Variables */
+        :root {
+            /* Light Theme (default) */
+            --bg-gradient-start: #667eea;
+            --bg-gradient-end: #764ba2;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: transparent;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-tertiary: #9ca3af;
+            --input-bg: #f3f4f6;
+            --input-border: #e5e7eb;
+            --input-focus: #667eea;
+            --header-bg: rgba(255, 255, 255, 0.1);
+            --header-border: rgba(255, 255, 255, 0.2);
+            --header-text: white;
+            --modal-overlay: rgba(0, 0, 0, 0.7);
+            --empty-preview-bg: #f9fafb;
+            --empty-preview-border: #e5e7eb;
+            --active-preview-bg: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            --active-preview-border: #86efac;
+            --active-preview-text: #10b981;
+            --result-bg: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
+            --result-border: #c7d2fe;
+            --info-box-bg: #dbeafe;
+            --info-box-border: #3b82f6;
+            --info-box-text: #1e40af;
+            --shadow: rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --bg-gradient-start: #1e293b;
+            --bg-gradient-end: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.95);
+            --card-border: rgba(71, 85, 105, 0.3);
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            --input-bg: #334155;
+            --input-border: #475569;
+            --input-focus: #818cf8;
+            --header-bg: rgba(15, 23, 42, 0.8);
+            --header-border: rgba(71, 85, 105, 0.3);
+            --header-text: #f1f5f9;
+            --modal-overlay: rgba(0, 0, 0, 0.85);
+            --empty-preview-bg: #334155;
+            --empty-preview-border: #475569;
+            --active-preview-bg: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+            --active-preview-border: #10b981;
+            --active-preview-text: #34d399;
+            --result-bg: linear-gradient(135deg, #312e81 0%, #3730a3 100%);
+            --result-border: #6366f1;
+            --info-box-bg: #1e3a8a;
+            --info-box-border: #3b82f6;
+            --info-box-text: #bfdbfe;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,20 +74,22 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             min-height: 100vh;
             padding-bottom: 60px;
+            transition: background 0.3s ease;
         }
 
         .header {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--header-bg);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid var(--header-border);
             padding: 20px;
             text-align: center;
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: all 0.3s ease;
         }
 
         .header-content {
@@ -40,17 +101,20 @@
         }
 
         .header h1 {
-            color: white;
+            color: var(--header-text);
             font-size: 28px;
             margin-bottom: 5px;
             flex: 1;
             text-align: center;
+            transition: color 0.3s ease;
         }
 
         .header p {
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--header-text);
+            opacity: 0.8;
             font-size: 14px;
             text-align: center;
+            transition: color 0.3s ease;
         }
 
         .settings-btn {
@@ -58,7 +122,7 @@
             right: 20px;
             background: rgba(255, 255, 255, 0.2);
             border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
+            color: var(--header-text);
             width: 45px;
             height: 45px;
             border-radius: 50%;
@@ -70,9 +134,27 @@
             justify-content: center;
         }
 
+        .theme-toggle {
+            position: absolute;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: var(--header-text);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover,
         .settings-btn:hover {
             background: rgba(255, 255, 255, 0.3);
-            transform: rotate(90deg);
+            transform: scale(1.05);
         }
 
         .container {
@@ -82,18 +164,21 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 20px;
             padding: 25px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px var(--shadow);
+            transition: all 0.3s ease;
         }
 
         .card h2 {
-            color: #333;
+            color: var(--text-primary);
             margin-bottom: 20px;
             font-size: 24px;
             text-align: center;
+            transition: color 0.3s ease;
         }
 
         .input-group {
@@ -102,24 +187,31 @@
 
         .input-group label {
             display: block;
-            color: #555;
+            color: var(--text-secondary);
             font-weight: 600;
             margin-bottom: 10px;
             font-size: 14px;
+            transition: color 0.3s ease;
         }
 
         .input-group input {
             width: 100%;
             padding: 15px;
             font-size: 18px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-primary);
             border-radius: 12px;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
 
         .input-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--input-focus);
+        }
+
+        .input-group input::placeholder {
+            color: var(--text-tertiary);
         }
 
         .currency-grid {
@@ -171,90 +263,6 @@
             font-size: 14px;
         }
 
-        .convert-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-
-        .convert-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .convert-btn:active {
-            transform: translateY(0);
-        }
-
-        .results {
-            margin-top: 20px;
-        }
-
-        .result-item {
-            background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            border: 2px solid #c7d2fe;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .result-original {
-            color: #64748b;
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .result-arrow {
-            color: #667eea;
-            font-size: 24px;
-            margin: 0 10px;
-        }
-
-        .result-converted {
-            color: #10b981;
-            font-weight: bold;
-            font-size: 20px;
-            text-align: right;
-        }
-
-        .clear-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-
-        .clear-btn:hover {
-            background: #dc2626;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #64748b;
-        }
-
-        .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
         .footer {
             position: fixed;
             bottom: 0;
@@ -274,72 +282,6 @@
             padding: 40px;
             color: white;
             font-size: 24px;
-        }
-
-        .camera-section {
-            margin-bottom: 20px;
-        }
-
-        .camera-toggle {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .camera-toggle h3 {
-            font-size: 18px;
-            color: #333;
-        }
-
-        .toggle-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .toggle-btn.start {
-            background: #667eea;
-            color: white;
-        }
-
-        .toggle-btn.stop {
-            background: #ef4444;
-            color: white;
-        }
-
-        .camera-view {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .camera-view video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .camera-placeholder {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: #f3f4f6;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #64748b;
-        }
-
-        .camera-placeholder-icon {
-            font-size: 48px;
-            margin-bottom: 10px;
         }
 
         /* Settings Modal */
@@ -363,7 +305,7 @@
         }
 
         .settings-content {
-            background: white;
+            background: var(--card-bg);
             border-radius: 20px;
             padding: 30px;
             max-width: 500px;
@@ -382,7 +324,7 @@
         .settings-header h2 {
             margin: 0;
             font-size: 24px;
-            color: #333;
+            color: var(--text-primary);
         }
 
         .close-btn {
@@ -553,8 +495,8 @@
 
         /* Live Preview */
         .live-preview {
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-            border: 2px solid #86efac;
+            background: var(--active-preview-bg);
+            border: 2px solid var(--active-preview-border);
             border-radius: 12px;
             padding: 20px;
             margin-top: 15px;
@@ -567,13 +509,13 @@
         }
 
         .live-preview.empty {
-            background: #f9fafb;
-            border-color: #e5e7eb;
+            background: var(--empty-preview-bg);
+            border-color: var(--empty-preview-border);
         }
 
         .live-preview-label {
             font-size: 12px;
-            color: #6b7280;
+            color: var(--text-secondary);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -583,19 +525,19 @@
         .live-preview-amount {
             font-size: 32px;
             font-weight: bold;
-            color: #10b981;
+            color: var(--active-preview-text);
             line-height: 1;
         }
 
         .live-preview.empty .live-preview-amount {
             font-size: 16px;
-            color: #9ca3af;
+            color: var(--text-tertiary);
             font-weight: 400;
         }
 
         .live-preview-rate {
             font-size: 11px;
-            color: #6b7280;
+            color: var(--text-secondary);
             margin-top: 8px;
         }
     </style>
@@ -603,6 +545,9 @@
 <body>
     <div class="header">
         <div class="header-content">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Promeni temu">
+                <span class="icon" id="themeIcon">☀</span>
+            </button>
             <button class="settings-btn" onclick="openSettings()"><span class="icon">⚙</span></button>
             <div style="flex: 1;">
                 <h1><span class="icon">⇄</span> Skener Cena</h1>
@@ -713,9 +658,6 @@
         let exchangeRates = null;
         let sourceCurrency = 'RSD';
         let targetCurrency = 'EUR';
-        let conversions = [];
-        let cameraActive = false;
-        let stream = null;
         let rateMode = 'api'; // 'api' or 'manual'
         let manualRates = {
             EUR: 1,
@@ -724,6 +666,40 @@
             RON: 4.97,
             BGN: 1.96,
         };
+
+        // Theme Management
+        function initTheme() {
+            // Load saved theme or detect system preference
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else if (systemPrefersDark) {
+                setTheme('dark');
+            } else {
+                setTheme('light');
+            }
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            updateThemeIcon(theme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            if (icon) {
+                icon.textContent = theme === 'dark' ? '☀' : '🌙';
+            }
+        }
 
         // Load settings from localStorage
         function loadSettings() {
@@ -907,31 +883,7 @@
         }
 
         // Handle convert
-        function handleConvert(e) {
-            e.preventDefault();
-            const input = document.getElementById('priceInput').value;
-            const amount = parseFloat(input.replace(',', '.'));
-
-            if (isNaN(amount) || amount <= 0) {
-                alert('Molimo unesite ispravnu cenu');
-                return;
-            }
-
-            const converted = convertCurrency(amount, sourceCurrency, targetCurrency);
-            conversions.unshift({
-                id: Date.now(),
-                originalAmount: amount,
-                originalCurrency: sourceCurrency,
-                convertedAmount: converted,
-                targetCurrency: targetCurrency,
-            });
-
-            document.getElementById('priceInput').value = '';
-            updateLivePreview(''); // Clear preview after convert
-            renderResults();
-        }
-
-        // Update live preview while typing
+        // Update live preview while typing - REAL-TIME CONVERSION
         function updateLivePreview(value) {
             const previewDiv = document.getElementById('livePreview');
             const previewLabel = document.getElementById('livePreviewLabel');
@@ -940,7 +892,7 @@
             
             if (!value || value === '' || value === '0') {
                 previewDiv.classList.add('empty');
-                previewLabel.textContent = 'Live Preview';
+                previewLabel.textContent = 'Real-Time Konverzija';
                 previewAmount.textContent = 'Unesite iznos za konverziju';
                 previewRate.textContent = '';
                 return;
@@ -965,166 +917,17 @@
             previewRate.textContent = `Kurs: 1 ${sourceCurrency} = ${rate} ${targetCurrency}`;
         }
 
-        // Handle input change
+        // Handle input change - triggers real-time conversion
         function handleInputChange(value) {
             updateLivePreview(value);
-        }
-
-        // Clear history
-        function clearHistory() {
-            conversions = [];
-            renderResults();
-        }
-
-        // Camera functions
-        async function startCamera() {
-            try {
-                // Provera da li browser podržava getUserMedia
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    alert('❌ Vaš browser ne podržava pristup kameri.\n\nMožete koristiti aplikaciju bez kamere.');
-                    return;
-                }
-
-                // Pokušaj sa zadnjom kamerom (environment)
-                let constraints = {
-                    video: { 
-                        facingMode: 'environment',
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    },
-                    audio: false
-                };
-
-                try {
-                    stream = await navigator.mediaDevices.getUserMedia(constraints);
-                } catch (err) {
-                    // Ako ne uspe sa environment, pokušaj sa bilo kojom kamerom
-                    console.log('Pokušavam sa bilo kojom kamerom...');
-                    constraints = {
-                        video: true,
-                        audio: false
-                    };
-                    stream = await navigator.mediaDevices.getUserMedia(constraints);
-                }
-                
-                const video = document.getElementById('cameraVideo');
-                if (video) {
-                    video.srcObject = stream;
-                    
-                    // Osiguraj da video počne da se reprodukuje
-                    video.onloadedmetadata = () => {
-                        video.play().catch(e => console.error('Video play error:', e));
-                    };
-                }
-                
-                cameraActive = true;
-                renderCamera();
-                
-            } catch (error) {
-                console.error('Camera error:', error);
-                
-                // Detaljnije error poruke
-                let errorMessage = '❌ Ne mogu pristupiti kameri.\n\n';
-                
-                if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
-                    errorMessage += 'Razlog: Niste dozvolili pristup kameri.\n\n';
-                    errorMessage += 'Rešenje:\n';
-                    errorMessage += '• Kliknite "Dozvoli" kada browser pita\n';
-                    errorMessage += '• Ili proverite podešavanja browsera\n\n';
-                } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
-                    errorMessage += 'Razlog: Kamera nije pronađena.\n\n';
-                } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
-                    errorMessage += 'Razlog: Kamera je možda u upotrebi od strane druge aplikacije.\n\n';
-                } else {
-                    errorMessage += 'Razlog: ' + error.message + '\n\n';
-                }
-                
-                errorMessage += 'Možete koristiti aplikaciju i bez kamere!';
-                
-                alert(errorMessage);
-            }
-        }
-
-        function stopCamera() {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                stream = null;
-            }
-            cameraActive = false;
-            renderCamera();
-        }
-
-        // Render functions
-        function renderCamera() {
-            const cameraSection = document.getElementById('cameraSection');
-            cameraSection.innerHTML = `
-                <div class="camera-toggle">
-                    <h3><span class="icon">●</span> Kamera (pomoć)</h3>
-                    <button class="toggle-btn ${cameraActive ? 'stop' : 'start'}" onclick="${cameraActive ? 'stopCamera()' : 'startCamera()'}">
-                        ${cameraActive ? '<span class="icon">■</span> Zaustavi' : '<span class="icon">▶</span> Pokreni'}
-                    </button>
-                </div>
-                ${cameraActive ? `
-                    <div class="camera-view">
-                        <video id="cameraVideo" autoplay playsinline></video>
-                    </div>
-                ` : `
-                    <div class="camera-placeholder">
-                        <div class="camera-placeholder-icon" style="font-size: 64px; opacity: 0.3;">○</div>
-                        <div>Kliknite "Pokreni" za pomoć kamere</div>
-                        <div style="font-size: 12px; margin-top: 5px;">(Opciono - možete koristiti i bez kamere)</div>
-                    </div>
-                `}
-            `;
-
-            if (cameraActive && stream) {
-                const video = document.getElementById('cameraVideo');
-                video.srcObject = stream;
-            }
-        }
-
-        function renderResults() {
-            const resultsDiv = document.getElementById('results');
-            
-            if (conversions.length === 0) {
-                resultsDiv.innerHTML = '';
-                return;
-            }
-
-            resultsDiv.innerHTML = `
-                <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h2 style="margin: 0;"><span class="icon">▤</span> Rezultati</h2>
-                        <button class="clear-btn" onclick="clearHistory()"><span class="icon">✕</span> Obriši sve</button>
-                    </div>
-                    <div class="results">
-                        ${conversions.map(conv => `
-                            <div class="result-item">
-                                <div class="result-original">
-                                    ${formatNumber(conv.originalAmount)} ${conv.originalCurrency}
-                                </div>
-                                <div class="result-arrow">→</div>
-                                <div class="result-converted">
-                                    ${formatNumber(conv.convertedAmount)} ${conv.targetCurrency}
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
         }
 
         function renderApp() {
             const app = document.getElementById('app');
             app.innerHTML = `
-                <!-- Camera Card -->
+                <!-- Main Card -->
                 <div class="card">
-                    <div class="camera-section" id="cameraSection"></div>
-                </div>
-
-                <!-- Input Card -->
-                <div class="card">
-                    <h2><span class="icon">⇄</span> Konvertor</h2>
+                    <h2><span class="icon">⇄</span> Konvertor Valuta</h2>
                     
                     <div style="text-align: center; margin-bottom: 15px; padding: 10px; background: ${rateMode === 'api' ? '#dbeafe' : '#fef3c7'}; border-radius: 8px;">
                         <span style="font-size: 12px; color: ${rateMode === 'api' ? '#1e40af' : '#92400e'}; font-weight: 600;">
@@ -1132,72 +935,62 @@
                         </span>
                     </div>
                     
-                    <form onsubmit="handleConvert(event)">
-                        <div class="input-group">
-                            <label>Unesite cenu:</label>
-                            <input 
-                                type="text" 
-                                id="priceInput"
-                                placeholder="npr. 1250 ili 1250.50"
-                                inputmode="decimal"
-                                oninput="handleInputChange(this.value)"
-                            >
-                        </div>
+                    <div class="input-group">
+                        <label>Unesite iznos:</label>
+                        <input 
+                            type="text" 
+                            id="priceInput"
+                            placeholder="npr. 1250 ili 1250.50"
+                            inputmode="decimal"
+                            oninput="handleInputChange(this.value)"
+                            autofocus
+                        >
+                    </div>
 
-                        <!-- Live Preview -->
-                        <div class="live-preview empty" id="livePreview">
-                            <div class="live-preview-label" id="livePreviewLabel">Live Preview</div>
-                            <div class="live-preview-amount" id="livePreviewAmount">Unesite iznos za konverziju</div>
-                            <div class="live-preview-rate" id="livePreviewRate"></div>
-                        </div>
+                    <!-- Live Preview - Real-time conversion (moved here!) -->
+                    <div class="live-preview empty" id="livePreview">
+                        <div class="live-preview-label" id="livePreviewLabel">Real-Time Konverzija</div>
+                        <div class="live-preview-amount" id="livePreviewAmount">Unesite iznos za konverziju</div>
+                        <div class="live-preview-rate" id="livePreviewRate"></div>
+                    </div>
 
-                        <div class="input-group">
-                            <label>Izvorna valuta:</label>
-                            <div class="currency-grid">
-                                ${CURRENCIES.map(curr => `
-                                    <button 
-                                        type="button"
-                                        class="currency-btn ${sourceCurrency === curr.code ? 'active' : ''}"
-                                        onclick="sourceCurrency = '${curr.code}'; renderApp(); updateLivePreview(document.getElementById('priceInput').value);"
-                                    >
-                                        <span class="currency-symbol">${curr.symbol}</span>
-                                        <span class="currency-code">${curr.code}</span>
-                                    </button>
-                                `).join('')}
-                            </div>
+                    <div class="input-group">
+                        <label>Izvorna valuta:</label>
+                        <div class="currency-grid">
+                            ${CURRENCIES.map(curr => `
+                                <button 
+                                    type="button"
+                                    class="currency-btn ${sourceCurrency === curr.code ? 'active' : ''}"
+                                    onclick="sourceCurrency = '${curr.code}'; renderApp(); updateLivePreview(document.getElementById('priceInput').value);"
+                                >
+                                    <span class="currency-symbol">${curr.symbol}</span>
+                                    <span class="currency-code">${curr.code}</span>
+                                </button>
+                            `).join('')}
                         </div>
+                    </div>
 
-                        <div class="input-group">
-                            <label>Konvertuj u:</label>
-                            <div class="currency-grid">
-                                ${CURRENCIES.map(curr => `
-                                    <button 
-                                        type="button"
-                                        class="currency-btn ${targetCurrency === curr.code ? 'active target' : ''}"
-                                        onclick="targetCurrency = '${curr.code}'; renderApp(); updateLivePreview(document.getElementById('priceInput').value);"
-                                    >
-                                        <span class="currency-symbol">${curr.symbol}</span>
-                                        <span class="currency-code">${curr.code}</span>
-                                    </button>
-                                `).join('')}
-                            </div>
+                    <div class="input-group">
+                        <label>Ciljna valuta:</label>
+                        <div class="currency-grid">
+                            ${CURRENCIES.map(curr => `
+                                <button 
+                                    type="button"
+                                    class="currency-btn ${targetCurrency === curr.code ? 'active target' : ''}"
+                                    onclick="targetCurrency = '${curr.code}'; renderApp(); updateLivePreview(document.getElementById('priceInput').value);"
+                                >
+                                    <span class="currency-symbol">${curr.symbol}</span>
+                                    <span class="currency-code">${curr.code}</span>
+                                </button>
+                            `).join('')}
                         </div>
-
-                        <button type="submit" class="convert-btn">
-                            <span class="icon">⇄</span> Konvertuj
-                        </button>
-                    </form>
+                    </div>
                 </div>
-
-                <!-- Results -->
-                <div id="results"></div>
             `;
-
-            renderCamera();
-            renderResults();
         }
 
         // Initialize
+        initTheme();
         loadSettings();
         fetchExchangeRates();
     </script>
